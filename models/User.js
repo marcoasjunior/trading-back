@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('../database/mongoose')
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -22,6 +22,9 @@ const UserSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true
+},
+{
+    versionKey: false 
 })
 
 const User = mongoose.model('User', UserSchema)

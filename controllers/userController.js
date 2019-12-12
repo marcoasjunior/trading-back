@@ -1,13 +1,28 @@
-const app = require('express')()
-
 const User = require('../models/User')
 
-app.post('/register', async (req, res) => {
-    try {
-        const user = await User.create(req.body)
-        return res.send({user})
-    } catch (error) {
-        return res.statusCode(400).send({error: 'Registration failed' })
-        
+module.exports = {
+    
+    create: (req, res) => {
+        console.log(req.body)
+        let user = new User ({
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            contact: req.body.password
+        })
+
+        user.save()
+            .then(result => {
+                res.json({
+                    success: true,
+                    result: result
+                });
+            })
+            .catch(err => {
+                res.json({
+                    success: false,
+                    result: err
+                });
+            });
     }
-})
+}
