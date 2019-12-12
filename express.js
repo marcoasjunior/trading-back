@@ -1,7 +1,9 @@
 const app = require('express')()
 const bodyParser = require('body-parser')
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 const cors = require('cors')
+
+require('dotenv').config()
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -16,4 +18,5 @@ app.get('/', (req, res) => {
 
 app.listen(port, function () {
     console.log('Rolando o server')
+
   })
