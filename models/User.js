@@ -21,12 +21,10 @@ const UserSchema = new mongoose.Schema({
         type: String
     }
 }, {
-    timestamps: true
-},
-{
+    timestamps: true,
     versionKey: false 
 })
 
-const User = mongoose.model('User', UserSchema)
+const User = mongoose.model('User', UserSchema, 'users')
 
 module.exports = User

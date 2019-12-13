@@ -8,17 +8,14 @@ const CompanySchema = new mongoose.Schema({
     corporateName: {
         type: String,
         require: true,
-
     },
     cnpj: {
         type: String,
-        unique: true
-
+     
     },
     cpf: {
         type: String,
-        unique: true
-
+   
     },
     location: {
         cep: String,
@@ -29,15 +26,14 @@ const CompanySchema = new mongoose.Schema({
         type: String
     },
     users: [{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }]
 }, {
-    timestamps: true
-}, {
+    timestamps: true,
     versionKey: false
 })
 
-const Company = mongoose.model('Company', CompanySchema)
+const Company = mongoose.model('Company', CompanySchema, 'companies')
 
 module.exports = Company
