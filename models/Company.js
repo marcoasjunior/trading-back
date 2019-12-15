@@ -17,6 +17,10 @@ const CompanySchema = new mongoose.Schema({
         type: String,
    
     },
+    simples: {
+        type: Boolean,
+   
+    },
     location: {
         cep: String,
         address: String,

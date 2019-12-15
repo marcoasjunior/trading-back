@@ -5,10 +5,6 @@ const mongoose = require('mongoose')
 module.exports = {
 
     create: (req, res) => {
-        
-        var x = 0
-        
-        console.log(x++)
 
         let user = new User({
             _id: new mongoose.Types.ObjectId(),
@@ -19,27 +15,26 @@ module.exports = {
         })
 
         user.save((function (err) {
-            console.log(x++)
             if (err) return handleError(err)
         }))
-        console.log(x++)
+
 
         let company = new Company({
-                name: req.body.nameC,
-                corporateName: req.body.corporateName,
-                cnpj: req.body.cnpj,
-                cpf: req.body.cpf,
-                location: {
-                     cep: req.body.cep,
-                     address: req.body.address,
-                     address2: req.body.address2
-                 },
-                image: req.body.image,
-                 users: user._id
-            })
-            console.log(x++)
-        
-            company.save()
+            name: req.body.nameC,
+            corporateName: req.body.corporateName,
+            cnpj: req.body.cnpj,
+            cpf: req.body.cpf,
+            simples: req.body.simples,
+            location: {
+                cep: req.body.cep,
+                address: req.body.address,
+                address2: req.body.address2
+            },
+            image: req.body.image,
+            users: user._id
+        })
+
+        company.save()
             .then(result => {
                 res.json({
                     success: true,
@@ -52,6 +47,5 @@ module.exports = {
                     result: err
                 });
             });
-            console.log(x++)
     }
 }
