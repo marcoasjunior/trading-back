@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const passport = require('passport')
 
 module.exports = {
     
@@ -7,18 +8,18 @@ module.exports = {
         
         let user = new User ({
 
-            name: req.body.name,
+            name: req.body.nameContact,
             username: req.body.username,
             email: req.body.email,
-            contact: req.body.password
+            contact: req.body.number,
+
         })
 
         User.register(user, req.body.password, function(err, user) {
             if (err) {
                 console.log(err)
             }
-            console.log(user)
-        })
+            });
 
         user.save()
             .then(result => {
@@ -35,13 +36,12 @@ module.exports = {
             });
     },
 
-    login: (req, res) => {
-        
+    login: () => { 
+      
 
-
-
-
-
-
-    }
+       passport.authenticate('local', {
+            successRedirect: '/dashboard',
+            failureRedirect: '/login'
+        })}
+    
 }

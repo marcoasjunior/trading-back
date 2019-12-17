@@ -10,6 +10,7 @@ const upload = multer({
 const cloudinary = require('cloudinary').v2
 const cloudConfig = require('../util/cloudinary')
 const uniqueFilename = new Date().toISOString()
+const passport = require('passport')
 
 module.exports = {
 
@@ -51,17 +52,10 @@ module.exports = {
 
                 let user = new User ({
 
-                    name: req.body.name,
+                    name: req.body.nameContact,
                     username: req.body.username,
                     email: req.body.email,
-                    contact: req.body.password
-                })
-        
-                User.register(user, req.body.password, function(err, user) {
-                    if (err) {
-                        console.log(err)
-                    }
-                    console.log(user)
+                    contact: req.body.number,
                 })
 
                 company = new Company({
@@ -81,9 +75,21 @@ module.exports = {
 
                 // sending do Mongo
 
-                user.save((function (err) {
-                    if (err) return handleError(err)
-                }))
+                User.register(user, req.body.password, function(err, user) {
+                    if (err) {
+                        console.log(err)
+                    }
+                    passport.authenticate('local')(req, res, () => {
+                        User.findOne({
+                          username: req.body.username
+                        }, (err, person) => {
+                          res.statusCode = 200;
+                          res.setHeader('Content-Type', 'application/json');
+                          res.json({
+                            success: true,
+                            status: 'Registration Successful!',
+                          })})})
+                })
     
                 company.save()
                 .then(result => {
@@ -98,9 +104,10 @@ module.exports = {
                         result: err
                     })
                 })
-              
+
+  
             })
 
 
     }
-}
+    }

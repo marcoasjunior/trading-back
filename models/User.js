@@ -24,6 +24,14 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.plugin(passportLocalMongoose)
 
+UserSchema.methods.validPassword = function (password) {
+    if (password === this.password) {
+      return true; 
+    } else {
+      return false;
+    }
+  }
+
 const User = mongoose.model('User', UserSchema, 'users')
 
 module.exports = User
