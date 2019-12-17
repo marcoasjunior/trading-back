@@ -8,9 +8,16 @@ module.exports = {
         let user = new User ({
 
             name: req.body.name,
+            username: req.body.username,
             email: req.body.email,
-            password: req.body.password,
             contact: req.body.password
+        })
+
+        User.register(user, req.body.password, function(err, user) {
+            if (err) {
+                console.log(err)
+            }
+            console.log(user)
         })
 
         user.save()
@@ -26,5 +33,15 @@ module.exports = {
                     result: err
                 });
             });
+    },
+
+    login: (req, res) => {
+        
+
+
+
+
+
+
     }
 }

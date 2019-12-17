@@ -49,12 +49,19 @@ module.exports = {
 
                 // creating documents
 
-                user = new User({
-                    _id: new mongoose.Types.ObjectId(),
-                    name: req.body.nameContact,
+                let user = new User ({
+
+                    name: req.body.name,
+                    username: req.body.username,
                     email: req.body.email,
-                    password: req.body.password,
-                    contact: req.body.number
+                    contact: req.body.password
+                })
+        
+                User.register(user, req.body.password, function(err, user) {
+                    if (err) {
+                        console.log(err)
+                    }
+                    console.log(user)
                 })
 
                 company = new Company({
