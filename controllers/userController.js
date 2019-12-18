@@ -10,7 +10,6 @@ module.exports = {
 
             name: req.body.nameContact,
             username: req.body.username,
-            email: req.body.email,
             contact: req.body.number,
 
         })
@@ -36,12 +35,26 @@ module.exports = {
             });
     },
 
-    login: () => { 
-      
+    login: (req, res) => {
 
-       passport.authenticate('local', {
-            successRedirect: '/dashboard',
-            failureRedirect: '/login'
-        })}
+        User.findOne({
+            username: req.body.username
+        }, (err, person) => {
+            console.log(req.user)
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({
+                success: true,
+                status: 'Logged in!'
+    
+            });
+        })
+        
+
+
+
+
+
+    }
     
 }

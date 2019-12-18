@@ -54,8 +54,7 @@ module.exports = {
 
                     name: req.body.nameContact,
                     username: req.body.username,
-                    email: req.body.email,
-                    contact: req.body.number,
+                    contact: req.body.number
                 })
 
                 company = new Company({

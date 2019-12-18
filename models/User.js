@@ -6,12 +6,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    email: {
+    username: {
         type: String,
         unique: true,
         require: true,
         lowercase: true
-
     },
     
     contact: {
@@ -23,14 +22,6 @@ const UserSchema = new mongoose.Schema({
 })
 
 UserSchema.plugin(passportLocalMongoose)
-
-UserSchema.methods.validPassword = function (password) {
-    if (password === this.password) {
-      return true; 
-    } else {
-      return false;
-    }
-  }
 
 const User = mongoose.model('User', UserSchema, 'users')
 
