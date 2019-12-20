@@ -1,12 +1,13 @@
 const User = require('../models/User')
 const passport = require('passport')
+const jwt = require('jsonwebtoken')
 
 module.exports = {
-    
+
     create: (req, res) => {
         console.log(req.body)
-        
-        let user = new User ({
+
+        let user = new User({
 
             name: req.body.nameContact,
             username: req.body.username,
@@ -14,11 +15,11 @@ module.exports = {
 
         })
 
-        User.register(user, req.body.password, function(err, user) {
+        User.register(user, req.body.password, function (err, user) {
             if (err) {
                 console.log(err)
             }
-            });
+        });
 
         user.save()
             .then(result => {
@@ -35,26 +36,19 @@ module.exports = {
             });
     },
 
-    login: (req, res) => {
+    login: (req, res, next) => {
 
-        User.findOne({
-            username: req.body.username
-        }, (err, person) => {
-            console.log(req.user)
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json({
-                success: true,
-                status: 'Logged in!'
-    
-            });
-        })
-        
+        let user = req.user
 
-
-
-
+        // generate a signed son web token with the contents of user object and return it in the response
+        const token = jwt.sign({
+            id: user._id
+        }, 'ILovePokemon');
+        return res.json({
+            user: user.username,
+            token
+        });
 
     }
-    
+
 }

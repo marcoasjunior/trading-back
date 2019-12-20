@@ -10,34 +10,14 @@ const UserController = require('../controllers/UserController');
 const CompanyController = require('../controllers/CompanyController');
 
 
-
-
-router.post('/register/user', UserController.create)
 router.post('/register/company', upload.single('file'), CompanyController.create)
-router.post('/login', passport.authenticate('local'), UserController.login)
 
-
-
-router.get('/login', function(req, res) {
-    res.send([req.user, req.session]);
-  })
-
-router.get('/loginn', function(req, res) {
-    res.cookie('cookie_token',{ maxAge: 900000 })
-  })
+router.post('/profile', passport.authenticate('jwt', { session: false }), function(req, res) {
+        res.send(req.user);
+    }
+);
   
-
-
-
-router.get("/api/logout", function (req, res) {
-
-    req.logout()
-
-    console.log("logged out")
-
-    return res.send()
-})
-
+router.post('/login', passport.authenticate('local', {session: false}), UserController.login)
 
 
 module.exports = router
