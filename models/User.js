@@ -15,6 +15,9 @@ const UserSchema = new mongoose.Schema({
     
     contact: {
         type: String
+    },
+    avatar: {
+        type: String
     }
 }, {
     timestamps: true,

@@ -12,7 +12,7 @@ const CompanyController = require('../controllers/CompanyController');
 
 router.post('/register/company', upload.single('file'), CompanyController.create)
 
-router.post('/profile', passport.authenticate('jwt', { session: false }), function(req, res) {
+router.post('/profile', passport.authenticate('jwt', {session: false}), function(req, res) {
         res.send(req.user);
     }
 );

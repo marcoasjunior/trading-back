@@ -4,6 +4,10 @@ const Bid = require('./Bid')
 
 const TradingSchema = new mongoose.Schema({
 
+    number: {
+        type: String,
+        require: true
+    },
     notice: {
         type: String,
         require: true
@@ -25,10 +29,6 @@ const TradingSchema = new mongoose.Schema({
         require: true
    
     },
-    restrict: {
-        type: Boolean,
-        require: true
-    },
     companies: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company'
@@ -44,6 +44,10 @@ const TradingSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         }]          
+    },
+    phase: {
+        type: String,
+   
     },
     
 }, {
