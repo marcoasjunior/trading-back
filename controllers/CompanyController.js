@@ -1,16 +1,10 @@
 const Company = require('../models/Company')
 const User = require('../models/User')
-const mongoose = require('mongoose')
 const fs = require('fs')
-const multer = require('multer')
-const storage = require('../util/multer')
-const upload = multer({
-    storage: storage
-})
 const cloudinary = require('cloudinary').v2
 const cloudConfig = require('../util/cloudinary')
 const uniqueFilename = new Date().toISOString()
-const passport = require('passport')
+
 
 module.exports = {
 
@@ -77,17 +71,7 @@ module.exports = {
                 User.register(user, req.body.password, function(err, user) {
                     if (err) {
                         console.log(err)
-                    }
-                    passport.authenticate('local')(req, res, () => {
-                        User.findOne({
-                          username: req.body.username
-                        }, (err, person) => {
-                          res.statusCode = 200;
-                          res.setHeader('Content-Type', 'application/json');
-                          res.json({
-                            success: true,
-                            status: 'Registration Successful!',
-                          })})})
+                    }                   
                 })
     
                 company.save()
