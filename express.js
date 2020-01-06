@@ -22,7 +22,6 @@ passport.use(new LocalStrategy(User.authenticate()))
 // Register routes
 app.use('/api', router)
 
-
 // SERVER
 
 app.listen(port, function () {

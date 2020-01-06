@@ -5,13 +5,13 @@ const jwt = require('jsonwebtoken')
 module.exports = {
 
     create: (req, res) => {
-        console.log(req.body)
 
         let user = new User({
 
             name: req.body.nameContact,
             username: req.body.username,
             contact: req.body.number,
+            avatar: 'https://res.cloudinary.com/dxblalpv2/image/upload/v1578322291/avatar_f0uhiu.png'
 
         })
 
@@ -19,21 +19,16 @@ module.exports = {
             if (err) {
                 console.log(err)
             }
-        });
+        })
 
-        user.save()
-            .then(result => {
-                res.json({
-                    success: true,
-                    result: result
-                });
+        console.log(user)
+        Company.findOneAndUpdate({_id: req.user.company}, {$push: {users: user._id}})
+ 
+            .exec(function (err, response) {
+                if (err) return handleError(err);
+                res.json(response)
             })
-            .catch(err => {
-                res.json({
-                    success: false,
-                    result: err
-                });
-            });
+
     },
 
     login: (req, res, next) => {
@@ -48,10 +43,13 @@ module.exports = {
                 console.log(err)
             }
 
-            // generate a signed son web token with the contents of user object and return it in the response
+            // Token and paramethers
+
             const token = jwt.sign({
                     id: user._id,
-                    company: docs[0]._id
+                    company: docs[0]._id,
+                    type: docs[0].type
+
                 }, process.env.SUPERSECRET);
 
 
@@ -63,6 +61,7 @@ module.exports = {
 
         })
 
-    }
+    },
 
+    
 }

@@ -11,13 +11,13 @@ module.exports = {
     create: (req, res) => {
 
         // SEND FILE TO CLOUDINARY
-        
+
         cloudConfig()
 
         let company = null
         let user = null
 
-        
+
         cloudinary.uploader.upload(req.file.path, {
             public_id: `users/${uniqueFilename}`
         })
@@ -44,11 +44,12 @@ module.exports = {
 
                 // creating documents
 
-                let user = new User ({
+                let user = new User({
 
                     name: req.body.nameContact,
                     username: req.body.username,
-                    contact: req.body.number
+                    contact: req.body.number,
+                    avatar: 'https://res.cloudinary.com/dxblalpv2/image/upload/v1578322291/avatar_f0uhiu.png'
                 })
 
                 company = new Company({
@@ -68,29 +69,100 @@ module.exports = {
 
                 // sending do Mongo
 
-                User.register(user, req.body.password, function(err, user) {
+                User.register(user, req.body.password, function (err, user) {
                     if (err) {
                         console.log(err)
-                    }                   
-                })
-    
-                company.save()
-                .then(result => {
-                    res.json({
-                        success: true,
-                        result: result
-                    });
-                })
-                .catch(err => {
-                    res.json({
-                        success: false,
-                        result: err
-                    })
+                    }
                 })
 
-  
+                company.save()
+                    .then(result => {
+                        res.json({
+                            success: true,
+                            result: result
+                        });
+                    })
+                    .catch(err => {
+                        res.json({
+                            success: false,
+                            result: err
+                        })
+                    })
+
+
             })
 
 
+    },
+
+    getUsers: (req, res, next) => {
+
+        let user = req.user
+
+        Company.findById(user.company)
+            .populate('users')
+            .exec(function (err, response) {
+                if (err) return handleError(err);
+                res.json(response.users)
+            })
+
+    },
+
+    getItems: async (req, res, next) => {
+
+        let user = req.user
+        let services = []
+        let food = []
+        let clothes = []
+        let durables = []
+        let construction = []
+        let others = []
+
+        await Company.findById(user.company)
+            .populate('deposit')
+            .exec(function (err, response) {
+                if (err) return handleError(err)
+
+                response.deposit.forEach(item => {
+
+                    if (item.category === 'Serviços') {
+                        clothes.push(item)
+                    }
+                    if (item.category === 'Vestuário') {
+                        clothes.push(item)
+                    }
+                    if (item.category === 'Alimentação') {
+                        clothes.push(item)
+                    }
+                    if (item.category === 'Material Durável') {
+                        clothes.push(item)
+                    }
+                    if (item.category === 'Obras e Reformas') {
+                        clothes.push(item)
+                    }
+                    if (item.category === 'Outras Despesas') {
+                        clothes.push(item)
+                    }
+
+                })
+                
+                const items = {
+                    'services': services,
+                    'food': food,
+                    'clothes': clothes,
+                    'durables': durables,
+                    'construction': construction,
+                    'others': others
+                }
+
+
+
+                res.json(items)
+
+            })
+
+
+
+
     }
-    }
+}

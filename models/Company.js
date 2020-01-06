@@ -29,6 +29,13 @@ const CompanySchema = new mongoose.Schema({
     image: {
         type: String
     },
+    type: {
+        type: String
+    },
+    deposit: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Item'
+    }],
     users: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

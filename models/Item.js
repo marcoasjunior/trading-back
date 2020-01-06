@@ -16,8 +16,8 @@ const ItemSchema = new mongoose.Schema({
     price: mongoose.Decimal128
     ,
     
-    tags: {
-        type: Array
+    category: {
+        type: String
     }
 }, {
     timestamps: true,
