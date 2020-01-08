@@ -28,6 +28,9 @@ router.post('/register/item', [auth, upload.single('file')], ItemController.crea
 router.post('/register/company', upload.single('file'), CompanyController.create)
 router.post('/register/user', [auth, upload.single('file')],  UserController.create)
 
+// Edit
+
+router.post('/edit/item', [auth, upload.single('file')], ItemController.edit)
 
   
 router.post('/login', passport.authenticate('local', {session: false}), UserController.login)

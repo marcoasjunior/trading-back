@@ -36,4 +36,21 @@ module.exports = {
 
     },
 
+    edit: (req, res, next) => {
+
+        Item.findByIdAndUpdate(req.body.id, {
+                name: req.body.name,
+                description: req.body.description,
+                price: req.body.price,
+                category: req.body.category
+        
+
+            })
+            .exec(function (err, response) {
+                if (err) return handleError(err);
+                res.status(200).send('Item alterado')
+            })
+
+    },
+
 }
