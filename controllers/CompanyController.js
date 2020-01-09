@@ -111,52 +111,27 @@ module.exports = {
     getItems: async (req, res, next) => {
 
         let user = req.user
-        let services = []
-        let food = []
-        let clothes = []
-        let durables = []
-        let construction = []
-        let others = []
+       
+
 
         await Company.findById(user.company)
             .populate('deposit')
             .exec(function (err, response) {
                 if (err) return handleError(err)
-
+                let items = []
+                
                 response.deposit.forEach(item => {
 
-                    if (item.category === 'Serviços') {
-                        clothes.push(item)
-                    }
-                    if (item.category === 'Vestuário') {
-                        clothes.push(item)
-                    }
-                    if (item.category === 'Alimentação') {
-                        clothes.push(item)
-                    }
-                    if (item.category === 'Material Durável') {
-                        clothes.push(item)
-                    }
-                    if (item.category === 'Obras e Reformas') {
-                        clothes.push(item)
-                    }
-                    if (item.category === 'Outras Despesas') {
-                        clothes.push(item)
-                    }
+                    items.push({
+                        _id: item._id,
+                        name: item.name,
+                        description: item.description,
+                        price: parseFloat(item.price),
+                        category: item.category
+                    })
 
                 })
                 
-                const items = {
-                    'services': services,
-                    'food': food,
-                    'clothes': clothes,
-                    'durables': durables,
-                    'construction': construction,
-                    'others': others
-                }
-
-
-
                 res.json(items)
 
             })

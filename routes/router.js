@@ -32,6 +32,11 @@ router.post('/register/user', [auth, upload.single('file')],  UserController.cre
 
 router.post('/edit/item', [auth, upload.single('file')], ItemController.edit)
 
+// Delete
+
+router.post('/delete/item', auth, ItemController.delete)
+
+
   
 router.post('/login', passport.authenticate('local', {session: false}), UserController.login)
 

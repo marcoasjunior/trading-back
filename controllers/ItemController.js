@@ -53,4 +53,16 @@ module.exports = {
 
     },
 
+    delete: (req, res, next) => {
+
+        console.log(req.body)
+        Item.findByIdAndRemove(req.body._id, (err, response) => {
+            if (err) return handleError(err);
+                res.status(200).send('Item deletado: ' + response )
+        })
+
+    }
+                
+       
+
 }
