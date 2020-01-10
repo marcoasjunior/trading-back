@@ -63,5 +63,32 @@ module.exports = {
 
     },
 
+    edit: (req, res, next) => {
+
+        console.log(req.body)
+        User.findByIdAndUpdate(req.body.id, {
+                name: req.body.nameContact,
+                username: req.body.username,
+                contact: req.body.number,
+        
+
+            })
+            .exec(function (err, response) {
+                if (err) return handleError(err);
+                res.status(200).send(response)
+            })
+
+    },
+
+    delete: (req, res, next) => {
+
+        console.log(req.body)
+        User.findByIdAndRemove(req.body._id, (err, response) => {
+            if (err) return handleError(err);
+                res.status(200).send('Usuário deletado: ' + response )
+        })
+
+    }
+
     
 }

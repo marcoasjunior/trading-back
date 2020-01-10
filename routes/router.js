@@ -31,10 +31,12 @@ router.post('/register/user', [auth, upload.single('file')],  UserController.cre
 // Edit
 
 router.post('/edit/item', [auth, upload.single('file')], ItemController.edit)
+router.post('/edit/user', [auth, upload.single('file')], UserController.edit)
 
 // Delete
 
 router.post('/delete/item', auth, ItemController.delete)
+router.post('/delete/user', auth, UserController.delete)
 
 
   
