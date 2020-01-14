@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({
     extended: true
   }))
 
-app.use(cors({credentials: true, origin: 'http://localhost:8080'}))
+app.use(cors({credentials: true, origin: ['http://localhost:8080', 'http://localhost:8081' ]}))
 app.use(passport.initialize())
 passport.use(new LocalStrategy(User.authenticate()))
 

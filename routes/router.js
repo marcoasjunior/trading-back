@@ -9,6 +9,7 @@ const upload = multer({
 const UserController = require('../controllers/UserController')
 const CompanyController = require('../controllers/CompanyController')
 const ItemController = require('../controllers/ItemController')
+const TradingController = require('../controllers/TradingController')
 require('dotenv').config()
 const jwt = require('express-jwt')
 const auth = jwt({secret: process.env.SUPERSECRET})
@@ -21,6 +22,7 @@ router.get('/profile', auth, (req, res) => {res.json(req.user)})
 
 router.get('/getUsers', auth, CompanyController.getUsers)
 router.get('/getItems', auth, CompanyController.getItems)
+router.get('/getTrading', auth, TradingController.getTrading)
 
 // Register
 

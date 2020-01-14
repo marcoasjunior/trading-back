@@ -1,6 +1,4 @@
 const mongoose = require('../database/mongoose')
-const Item = require('./Item')
-const Bid = require('./Bid')
 
 const TradingSchema = new mongoose.Schema({
 
@@ -29,23 +27,27 @@ const TradingSchema = new mongoose.Schema({
         require: true
    
     },
-    companies: [{
+    sellers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company'
     }],
-    items: [Item],
-    bids: [Bid],
-    team: {
-        admin: [{
+    buyers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company'
+    }],
+    items: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Item'
+    }],
+    bids: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Bid'
+    }],
+    admins: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
-        }],
-        authority: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }]          
-    },
-    phase: {
+        }],       
+    step: {
         type: String,
    
     },
