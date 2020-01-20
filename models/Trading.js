@@ -16,11 +16,19 @@ const TradingSchema = new mongoose.Schema({
     },
     startDate: {
         type: String,
-     
+        require: true,
     },
     endDate: {
         type: String,
-   
+        require: true,
+    },
+    startTime: {
+        type: String,
+        require: true,
+    },
+    endTime: {
+        type: String,
+        require: true,
     },
     evaluation: {
         type: String,
@@ -43,7 +51,7 @@ const TradingSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Bid'
     }],
-    admins: [{
+    users: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         }],       

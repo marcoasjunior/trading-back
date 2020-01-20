@@ -29,6 +29,7 @@ router.get('/getTrading', auth, TradingController.getTrading)
 router.post('/register/item', [auth, upload.single('file')], ItemController.create)
 router.post('/register/company', upload.single('file'), CompanyController.create)
 router.post('/register/user', [auth, upload.single('file')],  UserController.create)
+router.post('/register/trading', [auth, upload.single('file')],  TradingController.create)
 
 // Edit
 
