@@ -4,14 +4,24 @@ module.exports = {
 
     getTrading: (req, res, next) => {
 
-        let user = req.user
+        Trading.find()
+            .exec(function (err, response) {
+                if (err) return handleError(err);
+                console.log(response)
+                res.json(response)
+            })
 
-        // Company.findById(user.company)
-        //     .populate('users')
-        //     .exec(function (err, response) {
-        //         if (err) return handleError(err);
-        //         res.json(response.users)
-        //     })
+    },
+
+    cancel: (req, res, next) => {
+        console.log(req.body)
+
+        Trading.findByIdAndDelete(req.body.id)
+            .exec(function (err, response) {
+                if (err) return handleError(err);
+                console.log(response)
+                res.json(response)
+            })
 
     },
 

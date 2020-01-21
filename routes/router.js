@@ -36,12 +36,13 @@ router.post('/register/trading', [auth, upload.single('file')],  TradingControll
 router.post('/edit/item', [auth, upload.single('file')], ItemController.edit)
 router.post('/edit/user', [auth, upload.single('file')], UserController.edit)
 
-// Delete
+// Delete/Cancel
 
 router.post('/delete/item', auth, ItemController.delete)
 router.post('/delete/user', auth, UserController.delete)
+router.post('/cancel/trading', auth, TradingController.cancel)
 
-
+// login
   
 router.post('/login', passport.authenticate('local', {session: false}), UserController.login)
 
