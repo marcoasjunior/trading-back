@@ -42,7 +42,8 @@ module.exports = {
             endTime: req.body.endTime,
             items: items,
             users: users,
-            buyers: user.company
+            buyers: user.company,
+            step: req.body.step
 
 
         })
