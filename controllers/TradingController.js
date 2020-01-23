@@ -13,6 +13,16 @@ module.exports = {
 
     },
 
+    getTradingItems: (req, res, next) => {
+
+
+        Trading.findById(req.params.id, 'items').populate('items').exec(function (err, response) {
+                if (err) return handleError(err);
+                console.log(response)
+                res.json(response)
+            })
+    },
+
     cancel: (req, res, next) => {
         console.log(req.body)
 

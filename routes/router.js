@@ -23,6 +23,7 @@ router.get('/profile', auth, (req, res) => {res.json(req.user)})
 router.get('/getUsers', auth, CompanyController.getUsers)
 router.get('/getItems', auth, CompanyController.getItems)
 router.get('/getTrading', auth, TradingController.getTrading)
+router.get('/getTradingItems/:id', auth, TradingController.getTradingItems)
 
 // Register
 
