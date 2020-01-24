@@ -2,11 +2,17 @@ const mongoose = require('../database/mongoose')
 
 const BidSchema = new mongoose.Schema({
     
-    value: mongoose.Decimal128,
+    bid: mongoose.Decimal128,
     company: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company'
     }],
+    obs: {
+            type: String
+    },
+    type: {
+        type: String
+    }
 
 }, {
     timestamps: true,
