@@ -7,7 +7,7 @@ module.exports = {
         Trading.find()
             .exec(function (err, response) {
                 if (err) return handleError(err);
-                console.log(response)
+
                 res.json(response)
             })
 
@@ -18,7 +18,7 @@ module.exports = {
 
         Trading.findById(req.params.id, 'items').populate('items').exec(function (err, response) {
                 if (err) return handleError(err);
-                console.log(response)
+  
                 res.json(response)
             })
     },
@@ -29,7 +29,7 @@ module.exports = {
         Trading.findByIdAndDelete(req.body.id)
             .exec(function (err, response) {
                 if (err) return handleError(err);
-                console.log(response)
+
                 res.json(response)
             })
 

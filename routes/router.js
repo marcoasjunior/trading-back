@@ -10,6 +10,7 @@ const UserController = require('../controllers/UserController')
 const CompanyController = require('../controllers/CompanyController')
 const ItemController = require('../controllers/ItemController')
 const TradingController = require('../controllers/TradingController')
+const BidController = require('../controllers/BidController')
 require('dotenv').config()
 const jwt = require('express-jwt')
 const auth = jwt({secret: process.env.SUPERSECRET})
@@ -31,6 +32,8 @@ router.post('/register/item', [auth, upload.single('file')], ItemController.crea
 router.post('/register/company', upload.single('file'), CompanyController.create)
 router.post('/register/user', [auth, upload.single('file')],  UserController.create)
 router.post('/register/trading', [auth, upload.single('file')],  TradingController.create)
+router.post('/register/proposal', [auth, upload.single('file')],  BidController.create)
+
 
 // Edit
 
