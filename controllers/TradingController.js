@@ -14,12 +14,38 @@ module.exports = {
     },
 
     getTradingItems: (req, res, next) => {
-
-
+       
         Trading.findById(req.params.id, 'items').populate('items').exec(function (err, response) {
                 if (err) return handleError(err);
   
                 res.json(response)
+            })
+    },
+
+    getProposalItems: (req, res, next) => {
+
+        // Trading.findById(req.params.id, 'bids').populate('bids').populate({
+        //     path: 'bids',
+        //     populate: { path: 'item' }
+        //   }).exec(function (err, response) {
+        //         if (err) return handleError(err);
+
+
+        //         res.json(response)
+ 
+        //     })
+
+        Trading.findById(req.params.id, 'bids').populate('bids').exec(function (err, response) {
+                if (err) return handleError(err);
+
+
+
+
+
+
+
+                res.json(response)
+ 
             })
     },
 

@@ -6,7 +6,7 @@ module.exports = {
 
         let user = req.user
         let bid = new Bid({
-            bid: req.body.proposal,
+            bid: req.body.bid,
             obs: req.body.obs,
             type: req.body.type,
             company: user.company,

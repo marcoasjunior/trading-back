@@ -7,10 +7,10 @@ const BidSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company'
     }],
-    item: [{
+    item: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Item'
-    }],
+    },
     obs: {
             type: String
     },
