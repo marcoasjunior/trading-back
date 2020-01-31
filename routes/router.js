@@ -40,12 +40,14 @@ router.post('/register/proposal', [auth, upload.single('file')],  BidController.
 
 router.post('/edit/item', [auth, upload.single('file')], ItemController.edit)
 router.post('/edit/user', [auth, upload.single('file')], UserController.edit)
+router.post('/activate/proposal', auth, BidController.activate)
 
 // Delete/Cancel
 
 router.post('/delete/item', auth, ItemController.delete)
 router.post('/delete/user', auth, UserController.delete)
 router.post('/cancel/trading', auth, TradingController.cancel)
+router.post('/disable/proposal', auth, BidController.disable)
 
 // login
   

@@ -16,6 +16,9 @@ const BidSchema = new mongoose.Schema({
     },
     type: {
         type: String
+    },
+    status: {
+        type: String
     }
 
 }, {

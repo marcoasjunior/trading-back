@@ -44,7 +44,23 @@ module.exports = {
 
     },
 
-    delete: (req, res, next) => {
+    activate: (req, res, next) => {
+        let user = req.user
+        Bid.findByIdAndUpdate(req.body.id, {'status': 'active'}).exec(function (err, response) {
+            if (err) return handleError(err);
+            res.json(response)
+            console.log(response)
+        })
+
+    },
+    disable: (req, res, next) => {
+        let user = req.user
+        Bid.findByIdAndUpdate(req.body.id, {'status': 'disable'}).exec(function (err, response) {
+            if (err) return handleError(err);
+            res.json(response)
+            console.log(response)
+        })
+
 
 
     }

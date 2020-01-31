@@ -38,7 +38,7 @@ module.exports = {
         Trading.findById(req.params.id, 'bids').populate('bids').exec(function (err, response) {
                 if (err) return handleError(err);
 
-
+                
 
 
 
