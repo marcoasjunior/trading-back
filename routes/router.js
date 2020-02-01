@@ -24,6 +24,7 @@ router.get('/profile', auth, (req, res) => {res.json(req.user)})
 router.get('/getUsers', auth, CompanyController.getUsers)
 router.get('/getItems', auth, CompanyController.getItems)
 router.get('/getTrading', auth, TradingController.getTrading)
+router.get('/getTradingStep/:id', auth, TradingController.getTradingStep)
 router.get('/getTradingItems/:id', auth, TradingController.getTradingItems)
 router.get('/getProposalItems/:id', auth, TradingController.getProposalItems)
 
@@ -36,10 +37,11 @@ router.post('/register/trading', [auth, upload.single('file')],  TradingControll
 router.post('/register/proposal', [auth, upload.single('file')],  BidController.create)
 
 
-// Edit
+// Edit/Update
 
 router.post('/edit/item', [auth, upload.single('file')], ItemController.edit)
 router.post('/edit/user', [auth, upload.single('file')], UserController.edit)
+router.post('/update/step', auth, TradingController.step)
 router.post('/activate/proposal', auth, BidController.activate)
 
 // Delete/Cancel

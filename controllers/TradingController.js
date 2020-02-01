@@ -6,10 +6,19 @@ module.exports = {
 
         Trading.find()
             .exec(function (err, response) {
-                if (err) return handleError(err);
+                if (err) return handleError(err)
 
                 res.json(response)
             })
+
+    },
+    getTradingStep: (req, res, next) => {
+
+        Trading.findById(req.params.id, 'step').exec(function (err, response) {
+            if (err) return handleError(err);
+console.log(response)
+            res.json(response)
+        })
 
     },
 
@@ -53,6 +62,17 @@ module.exports = {
         console.log(req.body)
 
         Trading.findByIdAndDelete(req.body.id)
+            .exec(function (err, response) {
+                if (err) return handleError(err);
+
+                res.json(response)
+            })
+
+    },
+    step: (req, res, next) => {
+        console.log(req.body)
+
+        Trading.findByIdAndUpdate(req.body.id, {'step': 'rating'})
             .exec(function (err, response) {
                 if (err) return handleError(err);
 
