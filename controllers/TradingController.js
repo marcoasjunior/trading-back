@@ -31,33 +31,6 @@ console.log(response)
             })
     },
 
-    getProposalItems: (req, res, next) => {
-
-        // Trading.findById(req.params.id, 'bids').populate('bids').populate({
-        //     path: 'bids',
-        //     populate: { path: 'item' }
-        //   }).exec(function (err, response) {
-        //         if (err) return handleError(err);
-
-
-        //         res.json(response)
- 
-        //     })
-
-        Trading.findById(req.params.id, 'bids').populate('bids').exec(function (err, response) {
-                if (err) return handleError(err);
-
-                
-
-
-
-
-
-                res.json(response)
- 
-            })
-    },
-
     cancel: (req, res, next) => {
         console.log(req.body)
 

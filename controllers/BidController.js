@@ -38,10 +38,43 @@ module.exports = {
 
     },
 
-    edit: (req, res, next) => {
+    getBids: (req, res, next) => {
 
+        Trading.findById(req.params.id, 'bids').populate('bids').exec(function (err, response) {
+            if (err) return handleError(err);
+
+            res.json(response)
+
+        })
   
 
+    },
+
+    getProposalBids: (req, res, next) => {
+
+        // Trading.findById(req.params.id, 'bids').populate('bids').populate({
+        //     path: 'bids',
+        //     populate: { path: 'item' }
+        //   }).exec(function (err, response) {
+        //         if (err) return handleError(err);
+
+
+        //         res.json(response)
+ 
+        //     })
+
+        Trading.findById(req.params.id, 'bids').populate('bids').exec(function (err, response) {
+                if (err) return handleError(err);
+
+                
+
+
+
+
+
+                res.json(response)
+ 
+            })
     },
 
     activate: (req, res, next) => {

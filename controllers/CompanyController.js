@@ -64,7 +64,8 @@ module.exports = {
                         address2: req.body.address2
                     },
                     image: replaced,
-                    users: user._id
+                    users: user._id,
+                    type: req.body.type
                 })
 
                 // sending do Mongo
