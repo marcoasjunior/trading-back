@@ -59,6 +59,10 @@ const TradingSchema = new mongoose.Schema({
         type: String,
    
     },
+    winners:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Bid'
+    }],
     
 }, {
     timestamps: true,

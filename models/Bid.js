@@ -3,22 +3,29 @@ const mongoose = require('../database/mongoose')
 const BidSchema = new mongoose.Schema({
     
     bid: mongoose.Decimal128,
-    company: [{
+    company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company'
-    }],
+    },
     item: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Item'
     },
+    trading: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Trading'
+    },
     obs: {
-            type: String
+        type: String
     },
     type: {
         type: String
     },
     status: {
         type: String
+    },
+    ranking: {
+        type: Number
     }
 
 }, {
