@@ -12,7 +12,8 @@ module.exports = {
             type: req.body.type,
             company: user.company,
             item: req.body.idItem,
-            trading: req.body.idTrading
+            trading: req.body.idTrading,
+            status: true
         })
 
         bid.save()
@@ -47,28 +48,76 @@ module.exports = {
 
     },
 
-    getProposalBids: (req, res, next) => {
-        let user = req.user
-        // Trading.findById(req.params.id, 'bids').populate('bids').populate({
-        //     path: 'bids',
-        //     populate: { path: 'item' }
-        //   }).exec(function (err, response) {
-        //         if (err) return handleError(err);
+    getProposalBids: async function (req, res, next) {
+
+        await Bid.find({
+            trading: req.params.id,
+        }).populate('item', 'name').exec(function (err, response) {
+            if (err) return handleError(err);
+
+            let change = response.forEach(element => {
+
+                element.type = element.item.name
+
+                return element
+
+            })
+            // Coloquei o nome no type porque não consegui fazer de outra forma
+
+            res.json(response)
+
+        })
 
 
-        //         res.json(response)
+    },
 
-        //     })
+    getRankedBids: async function (req, res, next) {
 
-        Bid.find({
-            trading: req.body.id,
-            company: user.company
-        }, 'item').populate('item').exec(function (err, response) {
+        await Bid.find({
+            trading: req.params.id,
+        })
+
+        .populate('item', 'name')
+
+        .exec(function (err, response) {
+            
+            if (err) return handleError(err);
+
+            let change = response.forEach(element => {
+
+                element.type = element.item.name
+
+                return element
+
+            })
+            // Coloquei o nome no type porque não consegui fazer de outra forma
+
+            res.json(response)
+
+        })
+
+
+    },
+
+    getWinners: async function (req, res, next) {
+
+        await Bid.find({
+            trading: req.params.id,
+            winner: true
+        })
+
+        .populate('item', 'name')
+        .populate('company', 'name')
+
+        .exec(function (err, response) {
+
             if (err) return handleError(err);
 
             res.json(response)
 
         })
+
+
     },
 
     activate: (req, res, next) => {

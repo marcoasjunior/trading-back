@@ -24,8 +24,8 @@ const BidSchema = new mongoose.Schema({
     status: {
         type: String
     },
-    ranking: {
-        type: Number
+    winner: {
+        type: String
     }
 
 }, {

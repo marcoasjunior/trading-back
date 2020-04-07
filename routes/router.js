@@ -27,6 +27,8 @@ router.get('/getTrading', auth, TradingController.getTrading)
 router.get('/getTradingStep/:id', auth, TradingController.getTradingStep)
 router.get('/getTradingItems/:id', auth, TradingController.getTradingItems)
 router.get('/getProposalBids/:id', auth, BidController.getProposalBids)
+router.get('/getRankedBids/:id', auth, BidController.getRankedBids)
+router.get('/getWinners/:id', auth, BidController.getWinners)
 router.get('/getBids/:id', auth, BidController.getBids)
 
 // Register
