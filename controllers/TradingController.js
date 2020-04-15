@@ -1,4 +1,5 @@
 const Trading = require('../models/Trading')
+const upperFirstLetter = require('../util/upperFirstLetter')
 
 module.exports = {
 
@@ -6,29 +7,33 @@ module.exports = {
 
         Trading.find()
             .exec(function (err, response) {
-                if (err) return handleError(err)
+                if (err) return res.json(err)
 
                 res.json(response)
             })
-
-    },
-    getTradingStep: (req, res, next) => {
-
-        Trading.findById(req.params.id, 'step').exec(function (err, response) {
-            if (err) return handleError(err);
-console.log(response)
-            res.json(response)
-        })
 
     },
 
     getTradingItems: (req, res, next) => {
-       
+
         Trading.findById(req.params.id, 'items').populate('items').exec(function (err, response) {
-                if (err) return handleError(err);
-  
-                res.json(response)
-            })
+            if (err) return res.json(err);
+
+            res.json(response)
+        })
+    },
+
+    getTradingStep: (req, res, next) => {
+
+        let data
+
+        Trading.findById(req.params.id, 'step').exec(function (err, response) {
+            if (err) return res.json(err);
+
+            data = upperFirstLetter(response.step)
+
+            res.json(data)
+        })
     },
 
     cancel: (req, res, next) => {
@@ -36,7 +41,7 @@ console.log(response)
 
         Trading.findByIdAndDelete(req.body.id)
             .exec(function (err, response) {
-                if (err) return handleError(err);
+                if (err) return res.json(err);
 
                 res.json(response)
             })
@@ -45,9 +50,11 @@ console.log(response)
     step: (req, res, next) => {
         console.log(req.body)
 
-        Trading.findByIdAndUpdate(req.body.id, {'step': 'rating'})
+        Trading.findByIdAndUpdate(req.body.id, {
+                'step': 'rating'
+            })
             .exec(function (err, response) {
-                if (err) return handleError(err);
+                if (err) return res.json(err);
 
                 res.json(response)
             })
