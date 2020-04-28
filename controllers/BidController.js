@@ -48,53 +48,135 @@ module.exports = {
 
     },
 
-    getProposalBids: async function (req, res, next) {
+    async getProposalBids(req, res, next) {
 
-        await Bid.find({
-            trading: req.params.id,
-        }).populate('item', 'name').exec(function (err, response) {
-            if (err) return handleError(err);
+        let findElements = await Bid
+            .find({
+                trading: req.params.id,
+            }, async function (err, response) {
+                if (err) return res.json(err);
 
-            let change = response.forEach(element => {
+                response.forEach(element => {
 
-                element.type = element.item.name
+                    element.type = element.item.name
 
-                return element
+                    return element
+
+                }) 
+
+                // Coloquei o nome no type porque não consegui fazer de outra forma               
+
+                return response
+
+            }).populate('item', 'name')  
+
+        // --------------- Colocar winner nas propostas únicas ------------- //
+
+        // --------------- Dividir propostas unicas e multiplas ------------- //
+
+        let array1 = [] // Items com mais de uma proposta
+        let single = [] // Itens Propostas unicas
+
+        findElements.forEach((element, i) => {
+
+            let array2 = []
+
+            findElements.forEach((element2, j) => {
+
+                if (i === j) return null
+
+                if (element2.type === element.type) array2.push(element2)
 
             })
-            // Coloquei o nome no type porque não consegui fazer de outra forma
 
-            res.json(response)
+            if (array2.length === 0) return single.push(element)
+            if (array2.length > 0) return array1.push(element)
+
 
         })
 
+        // -----------------------  REFATORAR
+
+        for await (let bid of single) {
+
+            console.log(bid.status)
+
+            if (bid.status === 'disable') {
+
+                await Bid
+                    .findByIdAndUpdate(bid._id, {
+                        winner: false,
+                        status: 'disable'
+                    }, function (err, res) {
+                        if (err) return res.json(err);
+
+                        console.log('disable')
+
+                    })
+            }
+
+            if (bid.status === 'active') {
+
+                await Bid
+                    .findByIdAndUpdate(bid._id, {
+                        winner: true,
+                        status: 'active'
+                    }, function (err, res) {
+                        if (err) return res.json(err);
+
+                        console.log('active')
+
+
+                    })
+            }
+        }
+
+        await Bid
+            .find({
+                trading: req.params.id,
+            }, async function (err, response) {
+                if (err) return res.json(err);
+
+                response.forEach(element => {
+
+                    element.type = element.item.name
+
+                    return element
+
+                }) 
+
+                // Coloquei o nome no type porque não consegui fazer de outra forma               
+
+                res.json(response)
+
+            }).populate('item', 'name')  
 
     },
 
     getRankedBids: async function (req, res, next) {
 
         await Bid.find({
-            trading: req.params.id,
-        })
+                trading: req.params.id,
+            })
 
-        .populate('item', 'name')
+            .populate('item', 'name')
 
-        .exec(function (err, response) {
-            
-            if (err) return handleError(err);
+            .exec(function (err, response) {
 
-            let change = response.forEach(element => {
+                if (err) return handleError(err);
 
-                element.type = element.item.name
+                let change = response.forEach(element => {
 
-                return element
+                    element.type = element.item.name
+
+                    return element
+
+                })
+                // Coloquei o nome no type porque não consegui fazer de outra forma
+
+                res.json(response)
 
             })
-            // Coloquei o nome no type porque não consegui fazer de outra forma
-
-            res.json(response)
-
-        })
 
 
     },
@@ -102,20 +184,20 @@ module.exports = {
     getWinners: async function (req, res, next) {
 
         await Bid.find({
-            trading: req.params.id,
-            winner: true
-        })
+                trading: req.params.id,
+                winner: true
+            })
 
-        .populate('item', 'name')
-        .populate('company', 'name')
+            .populate('item', 'name')
+            .populate('company', 'name')
 
-        .exec(function (err, response) {
+            .exec(function (err, response) {
 
-            if (err) return handleError(err);
+                if (err) return handleError(err);
 
-            res.json(response)
+                res.json(response)
 
-        })
+            })
 
 
     },
@@ -131,6 +213,8 @@ module.exports = {
         })
 
     },
+
+
     disable: (req, res, next) => {
 
         Bid.findByIdAndUpdate(req.body.id, {
