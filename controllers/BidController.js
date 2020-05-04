@@ -48,58 +48,56 @@ module.exports = {
 
     },
 
-    async getProposalBids(req, res, next) {
+    async getProposalBids(req, res) {
 
-        let findElements = await Bid
+        let data = await Bid
             .find({
                 trading: req.params.id,
             }, async function (err, response) {
                 if (err) return res.json(err);
+            }).populate('item', 'name')
 
-                response.forEach(element => {
+        let formatedData = data.map(element => { 
 
-                    element.type = element.item.name
+            // Coloquei o nome no type porque não consegui fazer de outra forma                          
 
-                    return element
-
-                }) 
-
-                // Coloquei o nome no type porque não consegui fazer de outra forma               
-
-                return response
-
-            }).populate('item', 'name')  
-
-        // --------------- Colocar winner nas propostas únicas ------------- //
-
-        // --------------- Dividir propostas unicas e multiplas ------------- //
-
-        let array1 = [] // Items com mais de uma proposta
-        let single = [] // Itens Propostas unicas
-
-        findElements.forEach((element, i) => {
-
-            let array2 = []
-
-            findElements.forEach((element2, j) => {
-
-                if (i === j) return null
-
-                if (element2.type === element.type) array2.push(element2)
-
-            })
-
-            if (array2.length === 0) return single.push(element)
-            if (array2.length > 0) return array1.push(element)
-
+            element.type = element.item.name
+            return element
 
         })
 
-        // -----------------------  REFATORAR
+        // --------------- Dividir propostas unicas e multiplas ------------- //
+
+        let multi = [] // Itens com mais de uma proposta
+        let single = [] // Itens Propostas unicas
+        let idArray = [] // Id para ser se é repetido
+
+
+        formatedData.forEach((element) => {
+
+            
+            let filterArray = formatedData.filter((element2) => {
+
+                if (idArray.includes(String(element2._id))) return false
+                
+                return element2.type === element.type;
+                
+            })
+            
+            
+            if (filterArray.length === 1) return single.push(element)
+            if (filterArray.length > 0) {
+                
+                multi.push(filterArray)
+                idArray.push(String(element._id))
+                
+            } 
+            
+        })
+
+        // --------------- Colocar winner nas propostas únicas ------------- //
 
         for await (let bid of single) {
-
-            console.log(bid.status)
 
             if (bid.status === 'disable') {
 
@@ -109,8 +107,6 @@ module.exports = {
                         status: 'disable'
                     }, function (err, res) {
                         if (err) return res.json(err);
-
-                        console.log('disable')
 
                     })
             }
@@ -124,11 +120,46 @@ module.exports = {
                     }, function (err, res) {
                         if (err) return res.json(err);
 
-                        console.log('active')
-
-
                     })
             }
+        }
+
+        for await (let [i, array] of multi.entries()) {
+
+                let sorted = array.sort((a, b) => {
+
+                    const bid1 = parseFloat(parseFloat(a.bid))
+                    const bid2 = parseFloat(parseFloat(b.bid))
+                
+                    let comparison = 0;
+                    if (bid1 > bid2) {
+ //                   if (bid1 > bid2 && a.status === 'active') {
+                      comparison = 1;
+                    } else if (bid1 < bid2) {
+                      comparison = -1;
+                    }
+
+                    return comparison;
+                  })
+
+// LIDAR COM O RESTO DO ARRAY - COLOCAR PARA SORT PARA SÓ ATIVOS
+
+                //   await Bid
+                //     .findByIdAndUpdate(sorted[0]._id, {
+                //         winner: true,
+                //         status: 'active'
+                //     }, function (err, res) {
+                //         if (err) return res.json(err);
+
+                //     })
+
+                let remainder = sorted.slice(0, 1)
+
+                console.log(remainder)
+
+                
+
+
         }
 
         await Bid
@@ -143,13 +174,13 @@ module.exports = {
 
                     return element
 
-                }) 
+                })
 
                 // Coloquei o nome no type porque não consegui fazer de outra forma               
 
                 res.json(response)
 
-            }).populate('item', 'name')  
+            }).populate('item', 'name')
 
     },
 
