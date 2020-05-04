@@ -57,7 +57,7 @@ module.exports = {
                 if (err) return res.json(err);
             }).populate('item', 'name')
 
-        let formatedData = data.map(element => { 
+        let formatedData = data.map(element => {
 
             // Coloquei o nome no type porque não consegui fazer de outra forma                          
 
@@ -75,24 +75,24 @@ module.exports = {
 
         formatedData.forEach((element) => {
 
-            
+
             let filterArray = formatedData.filter((element2) => {
 
                 if (idArray.includes(String(element2._id))) return false
-                
+
                 return element2.type === element.type;
-                
+
             })
-            
-            
+
+
             if (filterArray.length === 1) return single.push(element)
             if (filterArray.length > 0) {
-                
+
                 multi.push(filterArray)
                 idArray.push(String(element._id))
-                
-            } 
-            
+
+            }
+
         })
 
         // --------------- Colocar winner nas propostas únicas ------------- //
@@ -124,43 +124,60 @@ module.exports = {
             }
         }
 
-        for await (let [i, array] of multi.entries()) {
+        // --------------- Colocar winner nas propostas multiplas ------------- //
 
-                let sorted = array.sort((a, b) => {
+        let remainder = []
 
-                    const bid1 = parseFloat(parseFloat(a.bid))
-                    const bid2 = parseFloat(parseFloat(b.bid))
-                
-                    let comparison = 0;
-                    if (bid1 > bid2) {
- //                   if (bid1 > bid2 && a.status === 'active') {
-                      comparison = 1;
-                    } else if (bid1 < bid2) {
-                      comparison = -1;
-                    }
+        for await (let array of multi) {
 
-                    return comparison;
-                  })
+            let sorted = array.sort((a, b) => {
 
-// LIDAR COM O RESTO DO ARRAY - COLOCAR PARA SORT PARA SÓ ATIVOS
+                const bid1 = parseFloat(parseFloat(a.bid))
+                const bid2 = parseFloat(parseFloat(b.bid))
 
-                //   await Bid
-                //     .findByIdAndUpdate(sorted[0]._id, {
-                //         winner: true,
-                //         status: 'active'
-                //     }, function (err, res) {
-                //         if (err) return res.json(err);
+                let comparison = 0;
+    //            if (bid1 < bid2) {
+                                       if (bid1 > bid2 && a.status === 'active') {
+                    comparison = 1;
+                } else if (bid1 > bid2) {
+                    comparison = -1;
+                }
 
-                //     })
+                return comparison;
+            })
 
-                let remainder = sorted.slice(0, 1)
+            await Bid
+                .findByIdAndUpdate(sorted[0]._id, {
+                    winner: true,
+                    status: 'active'
+                }, function (err, res) {
+                    if (err) return res.json(err);
 
-                console.log(remainder)
+                })
 
-                
+            let rest = sorted.slice(0, 1)
 
+            remainder.push(rest)
 
         }
+
+        // --------------- Colocar winner = false nas propostas restantes ------------- //
+
+        let flattedArray = remainder.flat()
+
+        for await (let element of flattedArray) {
+
+            let id = element._id
+
+            await Bid
+                .findByIdAndUpdate(id, {
+                    winner: false
+                }, function (err, res) {
+                    if (err) return res.json(err);
+
+                })
+        }
+
 
         await Bid
             .find({
