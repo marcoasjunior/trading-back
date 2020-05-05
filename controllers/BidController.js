@@ -126,44 +126,57 @@ module.exports = {
 
         // --------------- Colocar winner nas propostas multiplas ------------- //
 
-        let remainder = []
+        let rest = []
 
         for await (let array of multi) {
 
-            let sorted = array.sort((a, b) => {
+            let onlyActiveArray = array.filter((element) => element.status !== 'disable')
+
+            let sorted = onlyActiveArray.sort((a, b) => {
 
                 const bid1 = parseFloat(parseFloat(a.bid))
                 const bid2 = parseFloat(parseFloat(b.bid))
 
                 let comparison = 0;
-    //            if (bid1 < bid2) {
-                                       if (bid1 > bid2 && a.status === 'active') {
+
+                if (bid1 > bid2) {
+
                     comparison = 1;
-                } else if (bid1 > bid2) {
-                    comparison = -1;
+
+                } else {
+
+                    comparison = -1
+
                 }
 
                 return comparison;
             })
 
-            await Bid
-                .findByIdAndUpdate(sorted[0]._id, {
-                    winner: true,
-                    status: 'active'
-                }, function (err, res) {
-                    if (err) return res.json(err);
+            if (onlyActiveArray.length === 0) rest.push(onlyActiveArray) // Caso não haja propostas válidas   
 
-                })
 
-            let rest = sorted.slice(0, 1)
+            else {
 
-            remainder.push(rest)
+                await Bid
+                    .findByIdAndUpdate(sorted[0]._id, {
+
+                        winner: true
+
+                    }, function (err, res) {
+                        if (err) return res.json(err);
+
+                    })
+
+                let restArray = array.filter((element) => element._id !== sorted[0]._id)
+
+                rest.push(restArray)
+            }
 
         }
 
         // --------------- Colocar winner = false nas propostas restantes ------------- //
 
-        let flattedArray = remainder.flat()
+        let flattedArray = rest.flat()
 
         for await (let element of flattedArray) {
 
@@ -177,7 +190,6 @@ module.exports = {
 
                 })
         }
-
 
         await Bid
             .find({
