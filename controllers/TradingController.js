@@ -48,10 +48,9 @@ module.exports = {
 
     },
     step: (req, res, next) => {
-        console.log(req.body)
 
         Trading.findByIdAndUpdate(req.body.id, {
-                'step': 'rating'
+                'step': req.body.step
             })
             .exec(function (err, response) {
                 if (err) return res.json(err);
