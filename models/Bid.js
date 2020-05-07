@@ -1,7 +1,7 @@
 const mongoose = require('../database/mongoose')
 
 const BidSchema = new mongoose.Schema({
-    
+
     bid: mongoose.Decimal128,
     company: {
         type: mongoose.Schema.Types.ObjectId,
@@ -26,11 +26,18 @@ const BidSchema = new mongoose.Schema({
     },
     winner: {
         type: String
-    }
+    },
+    checked: {
+        type: Boolean
+    },
+    docs: [{
+        name: String,
+        file: String
+    }]
 
 }, {
     timestamps: true,
-    versionKey: false 
+    versionKey: false
 })
 
 const Bid = mongoose.model('Bid', BidSchema, 'bids')
