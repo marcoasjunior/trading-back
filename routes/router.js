@@ -35,7 +35,7 @@ router.get('/getBids/:id', auth, BidController.getBids)
 
 router.post('/register/item', [auth, upload.single('file')], ItemController.create)
 router.post('/register/company', upload.single('file'), CompanyController.create)
-router.post('/register/company/docs',[auth, upload.array('docs',2)], CompanyController.createDocs)
+router.post('/register/company/docs',[auth, upload.array('docs',10)], CompanyController.createDocs)
 router.post('/register/user', [auth, upload.single('file')],  UserController.create)
 router.post('/register/trading', [auth, upload.single('file')],  TradingController.create)
 router.post('/register/proposal', [auth, upload.single('file')],  BidController.create)

@@ -1,100 +1,62 @@
 const Company = require('../models/Company')
 const User = require('../models/User')
-const fs = require('fs')
-const cloudinary = require('cloudinary').v2
-const cloudConfig = require('../util/cloudinary')
-const uniqueFilename = new Date().toISOString()
-
 
 module.exports = {
 
     async create(req, res) {
 
-        // SEND FILE TO CLOUDINARY
-
-        cloudConfig()
-
+        let file = req.file
         let company = null
-        let user = null
+        let user = new User({
 
-
-        await  cloudinary.uploader.upload(req.file.path, {
-            public_id: `users/${uniqueFilename}`
+            name: req.body.nameContact,
+            username: req.body.username,
+            contact: req.body.number,
+            avatar: 'https://res.cloudinary.com/dxblalpv2/image/upload/v1578322291/avatar_f0uhiu.png'
         })
 
-        await cloudinary.uploader.upload(req.file.path, {
-                secure: true,
-                public_id: `users/${uniqueFilename}`
-
+        company = new Company({
+            name: req.body.name,
+            corporateName: req.body.social,
+            cnpj: req.body.cnpj,
+            cpf: req.body.cpf,
+            simples: req.body.simples,
+            location: {
+                cep: req.body.cep,
+                address: req.body.address,
+                address2: req.body.address2
             },
+            image: file.secure_url,
+            users: user._id,
+            type: req.body.type
+        })
 
-            function (err, image) {
+        // sending do Mongo
 
-                if (err) res.send(err)
+        await User.register(user, req.body.password, function (err, user) {
+            if (err) {
+                console.log(err)
+            }
+        })
 
-                console.log('file uploaded to Cloudinary')
-
-                // remove file from server
-
-                fs.unlinkSync(req.file.path)
-
-                // return image details
-
-                const replaced = image.url.replace(/http/i, 'https')
-
-                // creating documents
-
-                let user = new User({
-
-                    name: req.body.nameContact,
-                    username: req.body.username,
-                    contact: req.body.number,
-                    avatar: 'https://res.cloudinary.com/dxblalpv2/image/upload/v1578322291/avatar_f0uhiu.png'
+        company.save()
+            .then(result => {
+                res.json({
+                    success: true,
+                    result: result
+                });
+            })
+            .catch(err => {
+                res.json({
+                    success: false,
+                    result: err
                 })
-
-                company = new Company({
-                    name: req.body.name,
-                    corporateName: req.body.social,
-                    cnpj: req.body.cnpj,
-                    cpf: req.body.cpf,
-                    simples: req.body.simples,
-                    location: {
-                        cep: req.body.cep,
-                        address: req.body.address,
-                        address2: req.body.address2
-                    },
-                    image: replaced,
-                    users: user._id,
-                    type: req.body.type
-                })
-
-                // sending do Mongo
-
-                User.register(user, req.body.password, function (err, user) {
-                    if (err) {
-                        console.log(err)
-                    }
-                })
-
-                company.save()
-                    .then(result => {
-                        res.json({
-                            success: true,
-                            result: result
-                        });
-                    })
-                    .catch(err => {
-                        res.json({
-                            success: false,
-                            result: err
-                        })
-                    })
             })
     },
 
     async createDocs(req, res) {
 
-        const company = req.user.company 
+        const company = req.user.company
 
         for await (let doc of req.files) {
 
@@ -130,7 +92,7 @@ module.exports = {
     getItems: async (req, res, next) => {
 
         let user = req.user
-       
+
 
 
         await Company.findById(user.company)
@@ -138,7 +100,7 @@ module.exports = {
             .exec(function (err, response) {
                 if (err) return handleError(err)
                 let items = []
-                
+
                 response.deposit.forEach(item => {
 
                     items.push({
@@ -150,7 +112,7 @@ module.exports = {
                     })
 
                 })
-                
+
                 res.json(items)
 
             })
