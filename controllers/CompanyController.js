@@ -8,7 +8,7 @@ const uniqueFilename = new Date().toISOString()
 
 module.exports = {
 
-    create: (req, res) => {
+    async create(req, res) {
 
         // SEND FILE TO CLOUDINARY
 
@@ -18,11 +18,11 @@ module.exports = {
         let user = null
 
 
-        cloudinary.uploader.upload(req.file.path, {
+        await  cloudinary.uploader.upload(req.file.path, {
             public_id: `users/${uniqueFilename}`
         })
 
-        cloudinary.uploader.upload(req.file.path, {
+        await cloudinary.uploader.upload(req.file.path, {
                 secure: true,
                 public_id: `users/${uniqueFilename}`
 
@@ -89,10 +89,28 @@ module.exports = {
                             result: err
                         })
                     })
-
-
             })
+    },
 
+    async createDocs(req, res) {
+
+        const company = req.user.company 
+
+        for await (let doc of req.files) {
+
+            await Company.findOneAndUpdate({
+                _id: company
+            }, {
+                $push: {
+                    docs: {
+                        name: doc.originalname,
+                        file: doc.secure_url
+                    }
+                }
+            }).catch(err => res.send(err))
+        }
+
+        res.status(200).json('')
 
     },
 
